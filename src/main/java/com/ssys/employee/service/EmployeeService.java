@@ -38,21 +38,29 @@ public class EmployeeService {
 
 		if (newEmployee.getDepartament().length() > 100 || newEmployee.getName().length() > 100
 				|| newEmployee.getEmail().length() > 100) {
-			throw new InvalidLengthException("All fields must have contain less than 100 characters");
+			log.error("All fields must be less than 100 characters");
+			throw new InvalidLengthException("All fields must be less than 100 characters");
 
 		} else if (!newEmployee.getEmail().matches(EmailUtils.EMAIL_PATTERN)) {
+			log.error("Invalid email format");
 			throw new InvalidEmailException("Invalid email format");
 
 		} else if (newEmployee.getDepartament() == null || newEmployee.getDepartament().length() == 0
 				|| newEmployee.getName() == null || newEmployee.getName().length() == 0
 				|| newEmployee.getSalary() == null || newEmployee.getSalary() <= 0 || newEmployee.getBirthDate() == null
 				|| newEmployee.getEmail() == "") {
+			log.error("The values can not be negative or null");
 			throw new NullFieldsException("The values can't be null or negative");
 
 		} else if (newEmployee.getBirthDate().after(new Date())) {
-			throw new InvalidBirthDateException("You can't bor in the future, son");
+			log.error("You can not born in the future, son");
+			log.error("The date must be lesser than today");
+			throw new InvalidBirthDateException("The date must be lesser than today");
 
 		}
+		log.info("New employee added\n Name: " + newEmployee.getName() + "\n Email: " + newEmployee.getEmail()
+				+ "\n Departament: " + newEmployee.getDepartament() + "\n Salary: " + newEmployee.getSalary()
+				+ "\n Birth Date: " + newEmployee.getBirthDate());
 		return repository.save(newEmployee);
 	}
 
@@ -65,28 +73,35 @@ public class EmployeeService {
 		return repository.findById(id).map(employee -> {
 			if (newEmployee.getName() != null || newEmployee.getName() != "") {
 				employee.setName(newEmployee.getName());
+				log.info("Updated name: " + newEmployee.getName());
 			}
 
 			if (!newEmployee.getEmail().matches(EmailUtils.EMAIL_PATTERN) || newEmployee.getEmail() == "") {
+				log.error("Invalid email format");
 				throw new InvalidEmailException("Invalid email format");
-			} else {
-				employee.setName(newEmployee.getName());
-			}
-			if (newEmployee.getEmail() != null)
+			} else if (newEmployee.getEmail() != null) {
 				employee.setEmail(newEmployee.getEmail());
-			if (newEmployee.getDepartament() != null)
+				log.info("Updated email: " + newEmployee.getEmail());
+			}
+			if (newEmployee.getDepartament() != null) {
 				employee.setDepartament(newEmployee.getDepartament());
-			if (newEmployee.getSalary() != null)
+				log.info("Updated departament: " + newEmployee.getDepartament());
+			}
+			if (newEmployee.getSalary() != null || newEmployee.getSalary() > 0) {
 				employee.setSalary(newEmployee.getSalary());
-			if (newEmployee.getBirthDate() != null)
+				log.info("Updated salary: " + newEmployee.getSalary());
+			}
+			if (newEmployee.getBirthDate() != null) {
 				employee.setBirthDate(newEmployee.getBirthDate());
+				log.info("Updated birth date: " + newEmployee.getBirthDate());
+			}
 			return repository.save(employee);
 		}).orElseThrow(() -> new EmployeeNotFoundException());
 	}
 
 	public void deleteEmployee(Long id) throws EmployeeNotFoundException {
 		if (this.findEmployee(id) == null) {
-			log.error("Could not find Employee " + id);
+			log.error("Could not find employee " + id);
 			throw new EmployeeNotFoundException();
 		} else {
 			repository.deleteById(id);

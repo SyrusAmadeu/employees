@@ -37,13 +37,13 @@ public class Employee {
 
 	@Column(name = "emp_salary")
 	private Double salary;
-	
-	@JsonFormat(pattern="dd-MM-yyyy", timezone = "Brazil/East")
+
+	@JsonFormat(pattern = "dd-MM-yyyy", timezone = "Brazil/East", locale = "pt-BR")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "emp_birth_date", updatable = false)
 	private Date birthDate;
 
-	public Employee(String name, String email, String departament, double salary, Date birthDate) {
+	public Employee(String name, String email, String departament, Double salary, Date birthDate) {
 		super();
 		this.name = name;
 		this.email = email;

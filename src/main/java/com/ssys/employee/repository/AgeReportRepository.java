@@ -12,7 +12,7 @@ public interface AgeReportRepository extends JpaRepository<Employee, Long> {
 	@Query("SELECT e FROM Employee e WHERE e.birthDate = (SELECT MAX(birthDate) FROM Employee)")
 	Employee findEmployeeByOlder();
 	
-	@Query("SELECT AVG(year(birthDate)) FROM Employee")
+	@Query("SELECT  year(CURRENT_DATE) - AVG(year(birthDate)) FROM Employee")
 	String findAverageAge();
 	
 }
