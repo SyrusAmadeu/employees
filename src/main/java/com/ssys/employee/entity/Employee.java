@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -35,7 +37,8 @@ public class Employee {
 
 	@Column(name = "emp_salary")
 	private Double salary;
-
+	
+	@JsonFormat(pattern="dd-MM-yyyy", timezone = "Brazil/East")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "emp_birth_date", updatable = false)
 	private Date birthDate;
