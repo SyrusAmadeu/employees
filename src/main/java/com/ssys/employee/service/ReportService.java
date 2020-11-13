@@ -1,7 +1,6 @@
 package com.ssys.employee.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.ssys.employee.entity.AgeReport;
@@ -23,8 +22,8 @@ public class ReportService {
 
 	public SalaryReport salaryReport() {
 		SalaryReport salaryReport = SalaryReport.getInstance();
-		salaryReport.setLower(salaryRepository.findEmployeeByLowerSalary(PageRequest.of(0,1)));
-		salaryReport.setHigher(salaryRepository.findEmployeeByHigherSalary());
+		salaryReport.setLower(salaryRepository.findEmployeeByLowerSalary().get(0));
+		salaryReport.setHigher(salaryRepository.findEmployeeByHigherSalary().get(0));
 		salaryReport.setAverage(salaryRepository.findAverageSalary());
 		log.info("Returning salary report");
 		return salaryReport;
@@ -32,8 +31,8 @@ public class ReportService {
 
 	public AgeReport ageReport() {
 		AgeReport ageReport = AgeReport.getInstance();
-		ageReport.setYounger(ageRepository.findEmployeeByYounge());
-		ageReport.setOlder(ageRepository.findEmployeeByOlder());
+		ageReport.setYounger(ageRepository.findEmployeeByYounge().get(0));
+		ageReport.setOlder(ageRepository.findEmployeeByOlder().get(0));
 		ageReport.setAverage(ageRepository.findAverageAge());
 		log.info("Returning age report");
 		return ageReport;
